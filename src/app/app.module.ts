@@ -6,25 +6,28 @@ import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import * as fromUserReducer from './reducers/user-reducer.reducer';
-import * as fromResirvationReducer from './reducers/resirvation-reducer.reducer';
-import * as fromBooksReducer from './reducers/books-reducer.reducer';
-import { BooksReducer } from './reducers/books-reducer.reducer';
-import { reservationReducer } from './reducers/resirvation-reducer.reducer';
-
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import * as fromRestuarants from './reducers/restuarants.reducer';
+import * as fromLocationsReducer from './reducers/locations-reducer.reducer';
+import { LocationsService } from './services/locations/locations.service';
+import { EffectsModule } from '@ngrx/effects';
+import { HttpClientModule } from '@angular/common/http';
+import { OptionsSelectorContainerComponent } from 'src/app/shared/components/options-selector-container/options-selector-container.component';
+
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    OptionsSelectorContainerComponent
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
-    // BrowserAnimationsModule,
     NoopAnimationsModule,
     MatButtonModule,
     MatBadgeModule,
@@ -34,19 +37,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
-
-    // StoreModule.forRoot({
-    //   'reservationReducer': reservationReducer,
-    //   'booksReducer': BooksReducer
-    // }),
-
-    // StoreModule.forFeature('resirvationReducer', reservationReducer)
-
-    // StoreModule.forFeature('booksReducer', fromBooksReducer.BooksReducer),
-    // StoreModule.forFeature('userReducer', fromUserReducer.userReducer),
-    // StoreModule.forFeature('resirvationReducer', fromResirvationReducer.reservationReducer)
+    StoreModule.forFeature('restuarants', fromRestuarants.restuarantsReducer),
+    StoreModule.forFeature('locationsReducer', fromLocationsReducer.locationsReducer),
+    EffectsModule.forRoot([LocationsService])
   ],
-  providers: [],
+  providers: [
+    // LocationsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

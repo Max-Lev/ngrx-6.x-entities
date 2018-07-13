@@ -1,3 +1,4 @@
+import { LocationsService } from './services/locations/locations.service';
 import { BackState, backState } from './reducers/back-reducer.reducer';
 import { reducers } from './reducers/index';
 import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewEncapsulation } from '@angular/core';
@@ -6,54 +7,90 @@ import { UsersState, addUser } from './reducers/user-reducer.reducer';
 import { ReservationState } from './reducers/resirvation-reducer.reducer';
 import { BooksAppState, AddBooks, DeleteBooks } from './reducers/books-reducer.reducer';
 import { State } from './reducers';
+import { RestuarantsAppState } from './reducers/restuarants.reducer';
+import { MatSelectChange } from '@angular/material/select';
+import { MatOptionSelectionChange } from '@angular/material/core';
+import { FavoriteRestuarants } from './models/favorite-restuarants';
+import * as RESTUARANTS from './models/favorite-restuarants';
+import * as LOCATIONS from './models/favorite-locations';
+import { FavoriteLocations } from './models/favorite-locations';
 
-export interface Food {
-  value: string;
-  viewValue: string;
-};
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
-  foods: Food[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos' }
-  ];
+  restuarants: FavoriteRestuarants[] = RESTUARANTS.restuarants;
 
-  list: any[] = [];
+  locations: FavoriteLocations[] = LOCATIONS.locations;
 
-  constructor(private booksStore: Store<State>, private ref: ChangeDetectorRef) {
+  progressList: any[] = [];
 
-    this.booksStore.pipe(select('backState')).subscribe((state: BackState) => {
-      console.log('[back] state: ', state);
-      return state;
+  constructor(private booksStore: Store<State>, private restuarantsStore: Store<RestuarantsAppState>, private backStore: Store<State>,
+    private ref: ChangeDetectorRef, private locationsService: LocationsService) {
+
+    this.backStore$();
+    this.booksStore$();
+    this.restuarantsStore$();
+
+  };
+
+  ngOnInit(): void {
+
+  };
+
+  ngAfterViewInit(): void {
+    this.getLocationsData();
+  };
+
+  getLocationsData() {
+    this.locationsService.getData$.subscribe((data) => {
+      console.log(data)
+      debugger;
     });
+  }
 
+  selectedRestuarantEmitterHandler(option: MatSelectChange) {
+    console.log('restuarant value: ', option.value);
+  };
+  selectedLocationEmitterHandler(option: MatSelectChange) {
+    console.log('location value: ', option.value);
+  };
+
+  changeMode() {
+
+  };
+
+  restuarantsStore$() {
+    this.restuarantsStore.pipe(select('restuarants')).subscribe((state: RestuarantsAppState) => {
+      console.log('restuarantsState: ', state);
+    });
+  };
+
+  booksStore$() {
     // TODO: advanced - forRoot metaReducers
     this.booksStore.pipe(select('booksState')).subscribe((state: BooksAppState) => {
       if (state.type === '[BACK] BACK') {
         const prev = state.prev[state.prev.length - 1]['payload'];
-        this.list = Object.assign({}, prev);
+        this.progressList = Object.assign({}, prev);
       } else {
-        this.list = [...state.current['payload']];
+        this.progressList = [...state.current['payload']];
         console.log('BooksState initial$:', state);
       }
       return state;
     });
-
   };
 
-  ngOnInit(): void { };
-
-  ngAfterViewInit(): void {
-
-  }
+  backStore$() {
+    this.backStore.pipe(select('backState')).subscribe((state: BackState) => {
+      console.log('[back] state: ', state);
+      return state;
+    });
+  };
 
   addBooks(id: number, list: any[]) {
     const data = this.setActive(id, list);
@@ -70,21 +107,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   };
 
   setActive(id: number, list: any[]): any[] {
-
-    this.list = this.list.map((item) => {
-      if (id === item.id) {
-        item.selected = true;
-        return item;
-      } else {
-        item.selected = false;
-        return item;
-      }
+    this.progressList = this.progressList.map((item) => {
+      item.selected = (id === item.id) ? true : false; return item;
     });
-    return this.list;
-
+    return this.progressList;
   };
-
-
 
 
 }

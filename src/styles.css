@@ -1,2 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
+
 /* @import "~@angular/material/prebuilt-themes/indigo-pink.css"; */
+
+body,
+html {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #6a6363;
+  color: aqua;
+}
+
+* {
+  color: aqua;
+}
+
+button[type="button"] {
+  background-color: #323232 !important;
+  border: 1px solid #E91E63;
+}
+
+.mat-form-field-hide-placeholder .mat-select-placeholder {
+  /* color: aqua !important; */
+  color: aqua;
+}
+.mat-form-field-appearance-legacy .mat-form-field-label{
+  color:aqua;
+}

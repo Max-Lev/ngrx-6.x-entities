@@ -1,29 +1,29 @@
 <section>
-  <button class="navbtn" (click)="addBooks(0,list)" [style.border]="(list[0].selected) ? '1px solid red' : '1px solid black'">Add</button>
-  <button class="navbtn" (click)="deleteBooks(1,list)" [style.border]="(list[1].selected) ? '1px solid red' : '1px solid black'">Delete</button>
+  <button type="button" class="navbtn" (click)="addBooks(0,progressList)" [style.border]="(progressList[0].selected) ? '1px solid #E91E63' : '1px solid black'">Add</button>
+  <button type="button" class="navbtn" (click)="deleteBooks(1,progressList)" [style.border]="(progressList[1].selected) ? '1px solid #E91E63' : '1px solid black'">Delete</button>
+  <button type="button" class="navbtn" (click)="back()">Back</button>
 </section>
 
-<section>
-  <button (click)="back()">Back</button>
+<section class="container">
+
+  <section>
+    <app-options-selector-container (selectedEmitter)="selectedRestuarantEmitterHandler($event)" [data]="restuarants" [placeholder]="'Favorite Restuarant'">
+      <span>Favorite Restuarant: </span>
+    </app-options-selector-container>
+  </section>
+
+  <section>
+    <app-options-selector-container (selectedEmitter)="selectedLocationEmitterHandler($event)" [data]="locations" [placeholder]="'Favorite Location'">
+      <span>Favorite Location: </span>
+    </app-options-selector-container>
+  </section>
+
 </section>
 
-
-<mat-form-field>
-  <mat-select placeholder="Favorite food">
-    <mat-option *ngFor="let food of foods" [value]="food.value">
-      {{food.viewValue}}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
-
-
-<p>
-  <span matBadge="4" matBadgeOverlap="false">Text with a badge</span>
-</p>
-
-<p>
-  Button with a badge on the left
-  <button mat-raised-button color="primary" matBadge="8" matBadgePosition="before" matBadgeColor="accent">
-    Action
-  </button>
-</p>
+<section class="action-container">
+  <p>
+    <button (click)="changeMode()" mat-raised-button color="primary" matBadge="8" matBadgePosition="before" matBadgeColor="accent">
+      Change Mode
+    </button>
+  </p>
+</section>

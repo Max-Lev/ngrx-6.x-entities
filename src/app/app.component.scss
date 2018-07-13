@@ -1,0 +1,22 @@
+.navbtn {
+  padding: 1rem;
+  margin: 1rem;
+  outline: none;
+}
+
+.container {
+  display: flex;
+  border: 1px solid purple;
+  justify-content: space-around;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: space-between;
+}
+
+.action-container {
+  border: 1px solid;
+  display: flex;
+  justify-content: center;
+}
+
+
