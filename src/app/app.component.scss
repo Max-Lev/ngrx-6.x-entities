@@ -16,7 +16,7 @@
 .action-container {
   border: 1px solid;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;;
 }
-
-

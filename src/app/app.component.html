@@ -3,27 +3,35 @@
   <button type="button" class="navbtn" (click)="deleteBooks(1,progressList)" [style.border]="(progressList[1].selected) ? '1px solid #E91E63' : '1px solid black'">Delete</button>
   <button type="button" class="navbtn" (click)="back()">Back</button>
 </section>
+<form [formGroup]="reservationForm">
 
-<section class="container">
+  <section class="container">
 
-  <section>
-    <app-options-selector-container (selectedEmitter)="selectedRestuarantEmitterHandler($event)" [data]="restuarants" [placeholder]="'Favorite Restuarant'">
-      <span>Favorite Restuarant: </span>
-    </app-options-selector-container>
+    <section>
+      <app-options-selector-container (selectedEmitter)="selectedRestuarantEmitterHandler($event)" [data]="restuarants" [placeholder]="'Favorite Restuarant'">
+        <span>Favorite Restuarant: </span>
+      </app-options-selector-container>
+    </section>
+
+    <section>
+      <app-options-selector-container (selectedEmitter)="selectedLocationEmitterHandler($event)" [data]="locations" [placeholder]="'Favorite Location'">
+        <span>Favorite Location: </span>
+      </app-options-selector-container>
+    </section>
+
   </section>
 
-  <section>
-    <app-options-selector-container (selectedEmitter)="selectedLocationEmitterHandler($event)" [data]="locations" [placeholder]="'Favorite Location'">
-      <span>Favorite Location: </span>
-    </app-options-selector-container>
+  <section class="action-container">
+
+    <p>
+      <button [disabled]="!reservationForm.valid" type="submit" (click)="submit()" mat-raised-button color="primary">Order Reservation</button>
+    </p>
+
+    <p>
+      <button (click)="changeMode()" mat-raised-button color="primary" matBadge="8" matBadgePosition="before" matBadgeColor="accent">
+        Change Mode
+      </button>
+    </p>
+
   </section>
-
-</section>
-
-<section class="action-container">
-  <p>
-    <button (click)="changeMode()" mat-raised-button color="primary" matBadge="8" matBadgePosition="before" matBadgeColor="accent">
-      Change Mode
-    </button>
-  </p>
-</section>
+</form>

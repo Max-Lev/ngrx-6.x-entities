@@ -1,12 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
@@ -18,7 +17,7 @@ import { LocationsService } from './services/locations/locations.service';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { OptionsSelectorContainerComponent } from 'src/app/shared/components/options-selector-container/options-selector-container.component';
-
+import { MatDatepickerModule } from '@angular/material/datepicker'
 
 @NgModule({
   declarations: [
@@ -33,6 +32,7 @@ import { OptionsSelectorContainerComponent } from 'src/app/shared/components/opt
     MatBadgeModule,
     MatSelectModule,
     MatFormFieldModule,
+    MatDatepickerModule,
     FormsModule,
     ReactiveFormsModule,
     StoreModule.forRoot(reducers, { metaReducers }),

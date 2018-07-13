@@ -1,10 +1,11 @@
 <mat-form-field>
-  <mat-select (selectionChange)="selected($event)" [placeholder]="placeholder" [(ngModel)]="dataModel">
+  <mat-select (selectionChange)="selected($event)" [placeholder]="placeholder">
     <mat-option *ngFor="let dataitem of data" [value]="dataitem.id">
       {{dataitem.viewValue}}
     </mat-option>
   </mat-select>
 </mat-form-field>
 <p>
-    <ng-content></ng-content><span>{{selectedDisplay?.viewValue}}</span>
+  <ng-content></ng-content>
+  <span>{{selectedDisplay?.viewValue}}</span>
 </p>

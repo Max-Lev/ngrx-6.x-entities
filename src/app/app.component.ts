@@ -1,7 +1,7 @@
 import { LocationsService } from './services/locations/locations.service';
 import { BackState, backState } from './reducers/back-reducer.reducer';
 import { reducers } from './reducers/index';
-import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewEncapsulation, forwardRef } from '@angular/core';
 import { Store, select, createFeatureSelector, createSelector } from '@ngrx/store';
 import { UsersState, addUser } from './reducers/user-reducer.reducer';
 import { ReservationState } from './reducers/resirvation-reducer.reducer';
@@ -14,13 +14,22 @@ import { FavoriteRestuarants } from './models/favorite-restuarants';
 import * as RESTUARANTS from './models/favorite-restuarants';
 import * as LOCATIONS from './models/favorite-locations';
 import { FavoriteLocations } from './models/favorite-locations';
+import { FormGroup, FormBuilder, FormControl, NG_VALUE_ACCESSOR, Validators } from '../../node_modules/@angular/forms';
+import { OptionsSelectorContainerComponent } from './shared/components/options-selector-container/options-selector-container.component';
 
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: forwardRef(() => OptionsSelectorContainerComponent),
+    }
+  ]
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
@@ -30,12 +39,21 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   progressList: any[] = [];
 
-  constructor(private booksStore: Store<State>, private restuarantsStore: Store<RestuarantsAppState>, private backStore: Store<State>,
+  reservationForm: FormGroup;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private booksStore: Store<State>, private restuarantsStore: Store<RestuarantsAppState>, private backStore: Store<State>,
     private ref: ChangeDetectorRef, private locationsService: LocationsService) {
 
     this.backStore$();
     this.booksStore$();
     this.restuarantsStore$();
+
+    this.reservationForm = this.formBuilder.group({
+      restuarantsControl: new FormControl('', Validators.required),
+      locationsControl: new FormControl('', Validators.required),
+    });
 
   };
 
@@ -45,6 +63,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.getLocationsData();
+    console.log(this.reservationForm.valid);
+    this.reservationForm.valueChanges.subscribe(data => {
+      console.log('form: ', data);
+      console.log(this.reservationForm.controls)
+    });
+
   };
 
   getLocationsData() {
@@ -52,13 +76,16 @@ export class AppComponent implements OnInit, AfterViewInit {
       console.log(data)
       debugger;
     });
-  }
-
-  selectedRestuarantEmitterHandler(option: MatSelectChange) {
-    console.log('restuarant value: ', option.value);
   };
-  selectedLocationEmitterHandler(option: MatSelectChange) {
-    console.log('location value: ', option.value);
+
+  selectedRestuarantEmitterHandler(option: FavoriteRestuarants) {
+    console.log('restuarant value: ', option);
+    this.reservationForm.controls['restuarantsControl'].setValue(option);
+  };
+
+  selectedLocationEmitterHandler(option: FavoriteLocations) {
+    console.log('location value: ', option);
+    this.reservationForm.controls['locationsControl'].setValue(option);
   };
 
   changeMode() {

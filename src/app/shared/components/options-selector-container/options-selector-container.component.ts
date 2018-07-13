@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { MatSelectChange } from '../../../../../node_modules/@angular/material/select';
+import { FormControl, FormGroup, FormControlName } from '../../../../../node_modules/@angular/forms';
 
 
 @Component({
@@ -7,7 +8,7 @@ import { MatSelectChange } from '../../../../../node_modules/@angular/material/s
   templateUrl: './options-selector-container.component.html',
   styleUrls: ['./options-selector-container.component.scss']
 })
-export class OptionsSelectorContainerComponent implements OnInit, OnChanges {
+export class OptionsSelectorContainerComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Input() placeholder: string;
 
@@ -17,21 +18,25 @@ export class OptionsSelectorContainerComponent implements OnInit, OnChanges {
 
   selectedDisplay: any;
 
-  constructor() { }
+  constructor() {
+
+  };
 
   ngOnInit() {
 
-  }
+  };
+
+  ngAfterViewInit(): void {
+    
+  };
 
   ngOnChanges() {
-
-  }
+    
+  };
 
   selected(option: MatSelectChange) {
-    console.log(option);
-    this.selectedDisplay = this.data.find(item=>item['id']===option.value);
-    this.selectedEmitter.emit(option);
-
-  }
+    this.selectedDisplay = this.data.find(item => item['id'] === option.value);
+    this.selectedEmitter.emit(this.selectedDisplay);
+  };
 
 }
