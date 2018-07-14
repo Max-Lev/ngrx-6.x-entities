@@ -3,8 +3,8 @@
   <button type="button" class="navbtn" (click)="deleteBooks(1,progressList)" [style.border]="(progressList[1].selected) ? '1px solid #E91E63' : '1px solid black'">Delete</button>
   <button type="button" class="navbtn" (click)="back()">Back</button>
 </section>
-<form [formGroup]="reservationForm">
 
+<form [formGroup]="reservationForm">
   <section class="container">
 
     <section>
@@ -20,6 +20,14 @@
     </section>
 
   </section>
+
+  <!-- <section class="container" *ngIf="reservationForm.valid">
+    <section>
+      <app-options-selector-container (selectedEmitter)="selectedParticipantsHandler($event)" [data]="participants" [placeholder]="'Favorite Location'">
+        <span>Number Of Participants: </span>
+      </app-options-selector-container>
+    </section>
+  </section> -->
 
   <section class="action-container">
 

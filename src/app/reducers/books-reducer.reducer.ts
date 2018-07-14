@@ -97,7 +97,6 @@ export function BooksReducer(state: BooksAppState = new InitialBooks(), action: 
         payload: action.payload,
         prev: getPrev(state, action)
       }
-      console.log('backState: ', backactive);
       return backactive;
 
     default:

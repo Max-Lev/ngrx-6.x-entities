@@ -1,22 +1,17 @@
 import { LocationsService } from './services/locations/locations.service';
 import { BackState, backState } from './reducers/back-reducer.reducer';
-import { reducers } from './reducers/index';
 import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewEncapsulation, forwardRef } from '@angular/core';
 import { Store, select, createFeatureSelector, createSelector } from '@ngrx/store';
-import { UsersState, addUser } from './reducers/user-reducer.reducer';
-import { ReservationState } from './reducers/resirvation-reducer.reducer';
 import { BooksAppState, AddBooks, DeleteBooks } from './reducers/books-reducer.reducer';
 import { State } from './reducers';
 import { RestuarantsAppState } from './reducers/restuarants.reducer';
-import { MatSelectChange } from '@angular/material/select';
-import { MatOptionSelectionChange } from '@angular/material/core';
 import { FavoriteRestuarants } from './models/favorite-restuarants';
 import * as RESTUARANTS from './models/favorite-restuarants';
 import * as LOCATIONS from './models/favorite-locations';
-import { FavoriteLocations } from './models/favorite-locations';
+import { IFavoriteLocations } from './models/favorite-locations';
 import { FormGroup, FormBuilder, FormControl, NG_VALUE_ACCESSOR, Validators } from '../../node_modules/@angular/forms';
 import { OptionsSelectorContainerComponent } from './shared/components/options-selector-container/options-selector-container.component';
-
+import { LocationsState, GetALLLocationsAPI } from './reducers/locations-reducer.reducer';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +30,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   restuarants: FavoriteRestuarants[] = RESTUARANTS.restuarants;
 
-  locations: FavoriteLocations[] = LOCATIONS.locations;
+  // locations: FavoriteLocations[] = LOCATIONS.locations;
+  locations: IFavoriteLocations[] = [];
 
   progressList: any[] = [];
 
@@ -43,7 +39,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private booksStore: Store<State>, private restuarantsStore: Store<RestuarantsAppState>, private backStore: Store<State>,
+    private booksStore: Store<State>, private restuarantsStore: Store<RestuarantsAppState>,
+    private locationsStore: Store<LocationsState>,
+    private backStore: Store<State>,
     private ref: ChangeDetectorRef, private locationsService: LocationsService) {
 
     this.backStore$();
@@ -58,34 +56,33 @@ export class AppComponent implements OnInit, AfterViewInit {
   };
 
   ngOnInit(): void {
-
+    this.locationsStore.pipe(select('locationsReducer')).subscribe((state: LocationsState) => {
+      console.log('locationState: ', state)
+      this.locations = state.payload.map(item => new LOCATIONS.FavoriteLocation(item));
+      this.ref.detectChanges();
+    });
   };
 
   ngAfterViewInit(): void {
-    this.getLocationsData();
-    console.log(this.reservationForm.valid);
-    this.reservationForm.valueChanges.subscribe(data => {
-      console.log('form: ', data);
-      console.log(this.reservationForm.controls)
-    });
+    this.reservationForm$();
+    this.getLocationsDataAPI();
+  };
+
+  reservationForm$() {
 
   };
 
-  getLocationsData() {
-    this.locationsService.getData$.subscribe((data) => {
-      console.log(data)
-      debugger;
-    });
+  getLocationsDataAPI() {
+    this.locationsStore.dispatch(new GetALLLocationsAPI())
   };
 
   selectedRestuarantEmitterHandler(option: FavoriteRestuarants) {
-    console.log('restuarant value: ', option);
     this.reservationForm.controls['restuarantsControl'].setValue(option);
   };
 
-  selectedLocationEmitterHandler(option: FavoriteLocations) {
-    console.log('location value: ', option);
+  selectedLocationEmitterHandler(option: IFavoriteLocations) {
     this.reservationForm.controls['locationsControl'].setValue(option);
+    this.getLocationsDataAPI();
   };
 
   changeMode() {
@@ -93,9 +90,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   };
 
   restuarantsStore$() {
-    this.restuarantsStore.pipe(select('restuarants')).subscribe((state: RestuarantsAppState) => {
-      console.log('restuarantsState: ', state);
-    });
+    this.restuarantsStore.pipe(select('restuarants')).subscribe((state: RestuarantsAppState) => { });
   };
 
   booksStore$() {
@@ -106,7 +101,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.progressList = Object.assign({}, prev);
       } else {
         this.progressList = [...state.current['payload']];
-        console.log('BooksState initial$:', state);
       }
       return state;
     });
@@ -114,7 +108,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   backStore$() {
     this.backStore.pipe(select('backState')).subscribe((state: BackState) => {
-      console.log('[back] state: ', state);
       return state;
     });
   };

@@ -1,7 +1,5 @@
-import { Component, OnInit, Input, OnChanges, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter, AfterViewInit, SimpleChanges } from '@angular/core';
 import { MatSelectChange } from '../../../../../node_modules/@angular/material/select';
-import { FormControl, FormGroup, FormControlName } from '../../../../../node_modules/@angular/forms';
-
 
 @Component({
   selector: 'app-options-selector-container',
@@ -27,10 +25,10 @@ export class OptionsSelectorContainerComponent implements OnInit, OnChanges, Aft
   };
 
   ngAfterViewInit(): void {
-    
+
   };
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     
   };
 
